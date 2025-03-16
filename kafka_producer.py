@@ -1,8 +1,12 @@
+import logging
 from confluent_kafka import Producer
+
+# Включить логирование для Kafka
+logging.basicConfig(level=logging.DEBUG)
 
 # Настройки продюсера
 conf = {
-    'bootstrap.servers': 'localhost:9092',  # Адрес вашего Kafka брокера
+    'bootstrap.servers': 'localhost:9092',
     'client.id': 'python-producer'
 }
 
@@ -12,15 +16,18 @@ producer = Producer(conf)
 # Функция для обработки успешной отправки сообщения
 def delivery_report(err, msg):
     if err is not None:
-        print('Сообщение не отправлено: {}'.format(err))
+        logging.error(f'Сообщение не отправлено: {err}')
     else:
-        print('Сообщение отправлено в {} [{}]'.format(msg.topic(), msg.partition()))
+        logging.info(f'Сообщение отправлено в {msg.topic()} [{msg.partition()}]')
 
-# Отправка сообщения
+# Отправка сообщений
 topic = 'test_topic'
 message = 'Hello Kafka from Python!'
 
 producer.produce(topic, message, callback=delivery_report)
 
-# Ждем, пока все сообщения будут отправлены
+# Периодически вызываем poll() для обработки сообщений асинхронно
+producer.poll(0)
+
+# Даем время на завершение отправки сообщений
 producer.flush()
