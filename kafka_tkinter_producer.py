@@ -9,7 +9,7 @@ TOPIC_NAME = 'Test_topic'  # Топик для отправки сообщени
 # Создание Kafka-продюсера
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_BROKER,
-    value_serializer=lambda v: json.dumps(v).encode('utf-8')  # JSON-сериализация
+    
 )
 
 
@@ -22,7 +22,7 @@ def send_message():
         return
 
     message = {"text": message_text}
-    producer.send(TOPIC_NAME, value=message)
+    producer.send(TOPIC_NAME, value=message_text.encode('utf-8'))  # Отправляем просто строку
     producer.flush()
 
     status_label.config(text="Сообщение отправлено!", fg="green")
