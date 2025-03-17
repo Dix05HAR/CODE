@@ -21,7 +21,7 @@ def send_message():
         status_label.config(text="Ошибка: сообщение пустое!", fg="red")
         return
 
-    message = {"text": message_text}
+
     producer.send(TOPIC_NAME, value=message_text.encode('utf-8'))  # Отправляем просто строку
     producer.flush()
 
