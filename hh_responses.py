@@ -19,7 +19,7 @@ with sync_playwright() as p:
     page.get_by_role("button", name="Войти").click()
 
     # Ждем авторизацию
-    page.wait_for_url("https://cheboksary.hh.ru/applicant/*")
+    page.wait_for_url("https://cheboksary.hh.ru/?hhtmFrom=account_login")
 
     # Проверяем успешность авторизации
     if not page.query_selector('a[href="/logout"]'):
@@ -27,7 +27,7 @@ with sync_playwright() as p:
         exit(1)
 
     # Переходим к разделу откликов
-    page.get_by_role("link", name="Отклики и приглашения").click()
+    page.goto("https://cheboksary.hh.ru/applicant/negotiations?hhtmFrom=main")
 
     # Ждем загрузку страницы
     page.wait_for_load_state("networkidle")
